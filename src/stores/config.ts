@@ -44,6 +44,11 @@ export const useConfigStore = defineStore('config', () => {
     showHolidays: true,
   })
 
+  const tvConfig = ref({
+    /** M3U 播放列表地址 */
+    m3uUrl: '',
+  })
+
   const layoutConfig = ref({
     /** 仅显示时钟 */
     clockOnlyMode: false,
@@ -58,6 +63,7 @@ export const useConfigStore = defineStore('config', () => {
   return {
     haLayout,
     haConfig,
+    tvConfig,
     clockConfig,
     calendarConfig,
     layoutConfig,

@@ -10,6 +10,7 @@ import CalendarSettings from './settings/CalendarSettings.vue'
 import ClockSettings from './settings/ClockSettings.vue'
 import GeneralSettings from './settings/GeneralSettings.vue'
 import SmartHomeSettings from './settings/SmartHomeSettings.vue'
+import TVSettings from './settings/TVSettings.vue'
 import WeatherSettings from './settings/WeatherSettings.vue'
 
 const VERSION = packageJson.version
@@ -32,6 +33,7 @@ const clockSettingsRef = ref<InstanceType<typeof ClockSettings> | null>(null)
 const weatherSettingsRef = ref<InstanceType<typeof WeatherSettings> | null>(null)
 const calendarSettingsRef = ref<InstanceType<typeof CalendarSettings> | null>(null)
 const smartHomeSettingsRef = ref<InstanceType<typeof SmartHomeSettings> | null>(null)
+const tvSettingsRef = ref<InstanceType<typeof TVSettings> | null>(null)
 const generalSettingsRef = ref<InstanceType<typeof GeneralSettings> | null>(null)
 
 watch(showDrawer, (isShowing) => {
@@ -41,6 +43,7 @@ watch(showDrawer, (isShowing) => {
     weatherSettingsRef.value?.reset()
     calendarSettingsRef.value?.reset()
     smartHomeSettingsRef.value?.reset()
+    tvSettingsRef.value?.reset()
   }
 })
 
@@ -50,6 +53,7 @@ function saveAll() {
   weatherSettingsRef.value?.save()
   calendarSettingsRef.value?.save()
   smartHomeSettingsRef.value?.save()
+  tvSettingsRef.value?.save()
   showDrawer.value = false
 }
 
@@ -135,6 +139,8 @@ function closeDrawer() {
             <WeatherSettings v-if="activeTab === 'weather'" ref="weatherSettingsRef" />
             <CalendarSettings v-if="activeTab === 'calendar'" ref="calendarSettingsRef" />
             <SmartHomeSettings v-if="activeTab === 'smart'" ref="smartHomeSettingsRef" />
+            <!-- M3U 直播源设置：放在 HA 设置下方 -->
+            <TVSettings v-if="activeTab === 'smart'" ref="tvSettingsRef" />
           </div>
         </div>
       </div>

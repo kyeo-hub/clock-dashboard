@@ -13,6 +13,12 @@ import CalendarView from './views/CalendarView.vue'
 import ClockWeatherView from './views/ClockWeatherView.vue'
 import ClockWeatherViewCompact from './views/ClockWeatherViewCompact.vue'
 import SmartHomeView from './views/SmartHomeView.vue'
+import TVView from './views/TVView.vue'
+
+/** 页面总数：0 智能家居 / 1 时钟 / 2 日历 / 3 电视 */
+const PAGE_COUNT = 4
+/** 电视页索引 */
+const TV_PAGE = 3
 
 const configStore = useConfigStore()
 const { showDrawer, layoutConfig } = storeToRefs(configStore)
@@ -73,7 +79,7 @@ function handleTouchEnd(e: TouchEvent) {
       isSwiping.value = false
     }, 50)
 
-    if (diff > 0 && currentPage.value < 2)
+    if (diff > 0 && currentPage.value < 3)
       goToPage(currentPage.value + 1)
     else if (diff < 0 && currentPage.value > 0)
       goToPage(currentPage.value - 1)
@@ -92,7 +98,7 @@ function handleMouseUp(e: MouseEvent) {
       isSwiping.value = false
     }, 50)
 
-    if (diff > 0 && currentPage.value < 2)
+    if (diff > 0 && currentPage.value < 3)
       goToPage(currentPage.value + 1)
     else if (diff < 0 && currentPage.value > 0)
       goToPage(currentPage.value - 1)
@@ -106,10 +112,10 @@ function handleGlobalClick(e: MouseEvent) {
   }
 }
 
-/** 30 秒不操作自动返回首页 */
+/** 30 秒不操作自动返回首页（看电视时不打扰） */
 const { idle } = useIdle(30 * 1000)
 watch(idle, (newIdle) => {
-  if (newIdle) {
+  if (newIdle && currentPage.value !== TV_PAGE) {
     goToPage(1)
   }
 })
@@ -122,7 +128,7 @@ watchEffect(() => {
   if (left.value && currentPage.value > 0) {
     goToPage(currentPage.value - 1)
   }
-  if (right.value && currentPage.value < 2) {
+  if (right.value && currentPage.value < 3) {
     goToPage(currentPage.value + 1)
   }
 })
@@ -151,7 +157,7 @@ watch(language, (nextLocale) => {
 
     <div
       class="main-slider flex h-full transition-transform duration-700 cubic-bezier"
-      :style="{ transform: `translateX(-${currentPage * 100}vw)`, width: '300vw' }"
+      :style="{ transform: `translateX(-${currentPage * 100}vw)`, width: '400vw' }"
     >
       <div class="slide-page w-screen h-screen flex items-center justify-center flex-shrink-0">
         <SmartHomeView v-if="currentPage === 0" />
@@ -162,6 +168,9 @@ watch(language, (nextLocale) => {
       </div>
       <div class="slide-page w-screen h-screen flex items-center justify-center flex-shrink-0">
         <CalendarView v-if="currentPage === 2" ref="calendarRef" />
+      </div>
+      <div class="slide-page w-screen h-screen flex items-center justify-center flex-shrink-0">
+        <TVView v-if="currentPage === 3" />
       </div>
     </div>
 
